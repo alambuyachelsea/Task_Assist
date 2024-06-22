@@ -1,2 +1,2 @@
-# Flutter_ToDo_App
+# flutter_todo_app
 Simple flutter to do list application
