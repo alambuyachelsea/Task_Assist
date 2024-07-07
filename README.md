@@ -1,2 +1,2 @@
-# flutter_todo_app
+# Task_Assist
 Simple flutter to do list application
