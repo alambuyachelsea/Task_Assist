@@ -1,5 +1,5 @@
-name: flutter_todo_app
-description: "ToDo List application"
+name: the_me_card
+description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -53,10 +53,24 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  assets:
+    - assets/images/
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  fonts:
+    - family: Belleza
+      fonts:
+        - asset: assets/fonts/Belleza-Regular.ttf
+    - family: Sacramento
+      fonts:
+        - asset: assets/fonts/Sacramento-Regular.ttf
+    - family: Sora
+      fonts:
+        - asset: assets/fonts/Sora-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
