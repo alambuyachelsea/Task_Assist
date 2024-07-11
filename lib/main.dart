@@ -124,31 +124,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: ListView.builder(
-            itemCount: _items.length,
-            itemBuilder: (context, index) {
-              final item = _items[index];
-              return CheckboxListTile(
-                title: Text(
-                  item.name,
-                  style: TextStyle(
-                    decoration: item.isChecked ? TextDecoration.lineThrough : null,
+          child: SingleChildScrollView(
+            child: Column(
+              children: List.generate(_items.length, (index) {
+                final item = _items[index];
+                return CheckboxListTile(
+                  title: Text(
+                    item.name,
+                    style: TextStyle(
+                      decoration: item.isChecked ? TextDecoration.lineThrough : null,
+                    ),
                   ),
-                ),
-                value: item.isChecked,
-                onChanged: (bool? value) {
-                  setState(() {
-                    item.isChecked = value ?? false;
-                    if (item.isChecked) {
-                      _removeItemAfterDelay(index);
-                    }
-                  });
-                },
-              );
-            },
+                  value: item.isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      item.isChecked = value ?? false;
+                      if (item.isChecked) {
+                        _removeItemAfterDelay(index);
+                      }
+                    });
+                  },
+                );
+              }),
+            ),
           ),
         ),
         ElevatedButton(
@@ -214,31 +214,31 @@ class _ShoppingPageState extends State<ShoppingPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: ListView.builder(
-            itemCount: _items.length,
-            itemBuilder: (context, index) {
-              final item = _items[index];
-              return CheckboxListTile(
-                title: Text(
-                  item.name,
-                  style: TextStyle(
-                    decoration: item.isChecked ? TextDecoration.lineThrough : null,
+          child: SingleChildScrollView(
+            child: Column(
+              children: List.generate(_items.length, (index) {
+                final item = _items[index];
+                return CheckboxListTile(
+                  title: Text(
+                    item.name,
+                    style: TextStyle(
+                      decoration: item.isChecked ? TextDecoration.lineThrough : null,
+                    ),
                   ),
-                ),
-                value: item.isChecked,
-                onChanged: (bool? value) {
-                  setState(() {
-                    item.isChecked = value ?? false;
-                    if (item.isChecked) {
-                      _removeItemAfterDelay(index);
-                    }
-                  });
-                },
-              );
-            },
+                  value: item.isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      item.isChecked = value ?? false;
+                      if (item.isChecked) {
+                        _removeItemAfterDelay(index);
+                      }
+                    });
+                  },
+                );
+              }),
+            ),
           ),
         ),
         ElevatedButton(
@@ -304,31 +304,31 @@ class _WorkPageState extends State<WorkPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: ListView.builder(
-            itemCount: _items.length,
-            itemBuilder: (context, index) {
-              final item = _items[index];
-              return CheckboxListTile(
-                title: Text(
-                  item.name,
-                  style: TextStyle(
-                    decoration: item.isChecked ? TextDecoration.lineThrough : null,
+          child: SingleChildScrollView(
+            child: Column(
+              children: List.generate(_items.length, (index) {
+                final item = _items[index];
+                return CheckboxListTile(
+                  title: Text(
+                    item.name,
+                    style: TextStyle(
+                      decoration: item.isChecked ? TextDecoration.lineThrough : null,
+                    ),
                   ),
-                ),
-                value: item.isChecked,
-                onChanged: (bool? value) {
-                  setState(() {
-                    item.isChecked = value ?? false;
-                    if (item.isChecked) {
-                      _removeItemAfterDelay(index);
-                    }
-                  });
-                },
-              );
-            },
+                  value: item.isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      item.isChecked = value ?? false;
+                      if (item.isChecked) {
+                        _removeItemAfterDelay(index);
+                      }
+                    });
+                  },
+                );
+              }),
+            ),
           ),
         ),
         ElevatedButton(
