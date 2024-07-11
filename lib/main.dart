@@ -76,7 +76,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Widget> _items = [];
+  final List<TaskItem> _items = [];
   final TextEditingController _controller = TextEditingController();
 
   void _addItem() {
@@ -101,11 +101,7 @@ class _HomePageState extends State<HomePage> {
               child: Text('Add'),
               onPressed: () {
                 setState(() {
-                  _items.add(CheckboxListTile(
-                    title: Text(_controller.text),
-                    value: false,
-                    onChanged: (bool? value) {},
-                  ));
+                  _items.add(TaskItem(name: _controller.text));
                 });
                 _controller.clear();
                 Navigator.of(context).pop();
@@ -123,8 +119,25 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: ListView(
-            children: _items,
+          child: ListView.builder(
+            itemCount: _items.length,
+            itemBuilder: (context, index) {
+              final item = _items[index];
+              return CheckboxListTile(
+                title: Text(
+                  item.name,
+                  style: TextStyle(
+                    decoration: item.isChecked ? TextDecoration.lineThrough : null,
+                  ),
+                ),
+                value: item.isChecked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    item.isChecked = value ?? false;
+                  });
+                },
+              );
+            },
           ),
         ),
         ElevatedButton(
@@ -142,7 +155,7 @@ class ShoppingPage extends StatefulWidget {
 }
 
 class _ShoppingPageState extends State<ShoppingPage> {
-  final List<Widget> _items = [];
+  final List<TaskItem> _items = [];
   final TextEditingController _controller = TextEditingController();
 
   void _addItem() {
@@ -167,11 +180,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
               child: Text('Add'),
               onPressed: () {
                 setState(() {
-                  _items.add(CheckboxListTile(
-                    title: Text(_controller.text),
-                    value: false,
-                    onChanged: (bool? value) {},
-                  ));
+                  _items.add(TaskItem(name: _controller.text));
                 });
                 _controller.clear();
                 Navigator.of(context).pop();
@@ -189,8 +198,25 @@ class _ShoppingPageState extends State<ShoppingPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: ListView(
-            children: _items,
+          child: ListView.builder(
+            itemCount: _items.length,
+            itemBuilder: (context, index) {
+              final item = _items[index];
+              return CheckboxListTile(
+                title: Text(
+                  item.name,
+                  style: TextStyle(
+                    decoration: item.isChecked ? TextDecoration.lineThrough : null,
+                  ),
+                ),
+                value: item.isChecked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    item.isChecked = value ?? false;
+                  });
+                },
+              );
+            },
           ),
         ),
         ElevatedButton(
@@ -208,7 +234,7 @@ class WorkPage extends StatefulWidget {
 }
 
 class _WorkPageState extends State<WorkPage> {
-  final List<Widget> _items = [];
+  final List<TaskItem> _items = [];
   final TextEditingController _controller = TextEditingController();
 
   void _addItem() {
@@ -233,11 +259,7 @@ class _WorkPageState extends State<WorkPage> {
               child: Text('Add'),
               onPressed: () {
                 setState(() {
-                  _items.add(CheckboxListTile(
-                    title: Text(_controller.text),
-                    value: false,
-                    onChanged: (bool? value) {},
-                  ));
+                  _items.add(TaskItem(name: _controller.text));
                 });
                 _controller.clear();
                 Navigator.of(context).pop();
@@ -255,8 +277,25 @@ class _WorkPageState extends State<WorkPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: ListView(
-            children: _items,
+          child: ListView.builder(
+            itemCount: _items.length,
+            itemBuilder: (context, index) {
+              final item = _items[index];
+              return CheckboxListTile(
+                title: Text(
+                  item.name,
+                  style: TextStyle(
+                    decoration: item.isChecked ? TextDecoration.lineThrough : null,
+                  ),
+                ),
+                value: item.isChecked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    item.isChecked = value ?? false;
+                  });
+                },
+              );
+            },
           ),
         ),
         ElevatedButton(
@@ -266,4 +305,11 @@ class _WorkPageState extends State<WorkPage> {
       ],
     );
   }
+}
+
+class TaskItem {
+  String name;
+  bool isChecked;
+
+  TaskItem({required this.name, this.isChecked = false});
 }
