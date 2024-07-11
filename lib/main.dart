@@ -113,6 +113,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _removeItemAfterDelay(int index) {
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        _items.removeAt(index);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -134,6 +142,9 @@ class _HomePageState extends State<HomePage> {
                 onChanged: (bool? value) {
                   setState(() {
                     item.isChecked = value ?? false;
+                    if (item.isChecked) {
+                      _removeItemAfterDelay(index);
+                    }
                   });
                 },
               );
@@ -192,6 +203,14 @@ class _ShoppingPageState extends State<ShoppingPage> {
     );
   }
 
+  void _removeItemAfterDelay(int index) {
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        _items.removeAt(index);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -213,6 +232,9 @@ class _ShoppingPageState extends State<ShoppingPage> {
                 onChanged: (bool? value) {
                   setState(() {
                     item.isChecked = value ?? false;
+                    if (item.isChecked) {
+                      _removeItemAfterDelay(index);
+                    }
                   });
                 },
               );
@@ -271,6 +293,14 @@ class _WorkPageState extends State<WorkPage> {
     );
   }
 
+  void _removeItemAfterDelay(int index) {
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        _items.removeAt(index);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -292,6 +322,9 @@ class _WorkPageState extends State<WorkPage> {
                 onChanged: (bool? value) {
                   setState(() {
                     item.isChecked = value ?? false;
+                    if (item.isChecked) {
+                      _removeItemAfterDelay(index);
+                    }
                   });
                 },
               );
