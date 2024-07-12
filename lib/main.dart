@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,12 +15,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -26,10 +30,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    ShoppingPage(),
-    WorkPage(),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomePage(),
+    const ShoppingPage(),
+    const WorkPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -42,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task Assist'),
+        title: const Text('Task Assist'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -71,6 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -84,21 +90,21 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Home Task'),
+          title: const Text('Add Home Task'),
           content: TextField(
             controller: _controller,
-            decoration: InputDecoration(hintText: "Enter task name"),
+            decoration: const InputDecoration(hintText: "Enter task name"),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 _controller.clear();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Add'),
               onPressed: () {
                 setState(() {
                   _items.add(TaskItem(name: _controller.text));
@@ -114,7 +120,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _removeItemAfterDelay(int index) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _items.removeAt(index);
       });
@@ -153,7 +159,7 @@ class _HomePageState extends State<HomePage> {
         ),
         ElevatedButton(
           onPressed: _addItem,
-          child: Text('Add Home Task'),
+          child: const Text('Add Home Task'),
         ),
       ],
     );
@@ -161,6 +167,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ShoppingPage extends StatefulWidget {
+  const ShoppingPage({super.key});
+
   @override
   _ShoppingPageState createState() => _ShoppingPageState();
 }
@@ -174,21 +182,21 @@ class _ShoppingPageState extends State<ShoppingPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Shopping Task'),
+          title: const Text('Add Shopping Task'),
           content: TextField(
             controller: _controller,
-            decoration: InputDecoration(hintText: "Enter task name"),
+            decoration: const InputDecoration(hintText: "Enter task name"),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 _controller.clear();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Add'),
               onPressed: () {
                 setState(() {
                   _items.add(TaskItem(name: _controller.text));
@@ -204,7 +212,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
   }
 
   void _removeItemAfterDelay(int index) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _items.removeAt(index);
       });
@@ -243,7 +251,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
         ),
         ElevatedButton(
           onPressed: _addItem,
-          child: Text('Add Shopping Task'),
+          child: const Text('Add Shopping Task'),
         ),
       ],
     );
@@ -251,6 +259,8 @@ class _ShoppingPageState extends State<ShoppingPage> {
 }
 
 class WorkPage extends StatefulWidget {
+  const WorkPage({super.key});
+
   @override
   _WorkPageState createState() => _WorkPageState();
 }
@@ -264,21 +274,21 @@ class _WorkPageState extends State<WorkPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Work Task'),
+          title: const Text('Add Work Task'),
           content: TextField(
             controller: _controller,
-            decoration: InputDecoration(hintText: "Enter task name"),
+            decoration: const InputDecoration(hintText: "Enter task name"),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 _controller.clear();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Add'),
               onPressed: () {
                 setState(() {
                   _items.add(TaskItem(name: _controller.text));
@@ -294,7 +304,7 @@ class _WorkPageState extends State<WorkPage> {
   }
 
   void _removeItemAfterDelay(int index) {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _items.removeAt(index);
       });
@@ -333,7 +343,7 @@ class _WorkPageState extends State<WorkPage> {
         ),
         ElevatedButton(
           onPressed: _addItem,
-          child: Text('Add Work Task'),
+          child: const Text('Add Work Task'),
         ),
       ],
     );
