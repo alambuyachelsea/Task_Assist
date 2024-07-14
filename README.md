@@ -1,6 +1,5 @@
 # Task_Assist
 Simple flutter to do list application
-# Task Assist Flutter Application
 
 ## Overview
 
