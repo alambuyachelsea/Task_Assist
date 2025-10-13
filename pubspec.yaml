@@ -1,34 +1,31 @@
-name: task_assist
-description: "A to do list application."
-publish_to: 'none'
+name: todo_app
+description: "Ato do list application."
+
+publish_to: 'pub.dev' # Remove this line if you wish to publish to pub.dev
+
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ^3.8.1
 
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: "^0.14.4"
 
+# The following section is specific to Flutter packages.
 flutter:
-  assets:
-    - assets/images/
 
   uses-material-design: true
 
-  fonts:
-    - family: Belleza
-      fonts:
-        - asset: assets/fonts/Belleza-Regular.ttf
-    - family: Sacramento
-      fonts:
-        - asset: assets/fonts/Sacramento-Regular.ttf
-    - family: Sora
-      fonts:
-        - asset: assets/fonts/Sora-Regular.ttf
+
+
+

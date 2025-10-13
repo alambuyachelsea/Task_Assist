@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,346 +15,182 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Task Assist',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF004EA6)),
       ),
-      home: const MyHomePage(),
+      home: const TodoListScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class TodoListScreen extends StatefulWidget {
+  const TodoListScreen({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<TodoListScreen> createState() => _TodoListScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+class _TodoListScreenState extends State<TodoListScreen> {
+  List<String> todoItems = [];
+  List<bool> todoCompleted = [];
+  TextEditingController textController = TextEditingController();
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    const HomePage(),
-    const ShoppingPage(),
-    const WorkPage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadTodos(); // Load saved tasks on app start
+  }
 
-  void _onItemTapped(int index) {
+  // Load tasks from SharedPreferences
+  Future<void> _loadTodos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedTasks = prefs.getString('todoItems');
+    final savedStatus = prefs.getString('todoCompleted');
+
+    if (savedTasks != null && savedStatus != null) {
+      setState(() {
+        todoItems = List<String>.from(jsonDecode(savedTasks));
+        todoCompleted = List<bool>.from(jsonDecode(savedStatus));
+      });
+    }
+  }
+
+  // Save tasks to SharedPreferences
+  Future<void> _saveTodos() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('todoItems', jsonEncode(todoItems));
+    await prefs.setString('todoCompleted', jsonEncode(todoCompleted));
+  }
+
+  void addTodoItem() {
+    if (textController.text.isNotEmpty) {
+      setState(() {
+        todoItems.add(textController.text);
+        todoCompleted.add(false);
+        textController.clear();
+      });
+      _saveTodos();
+    }
+  }
+
+  void editTodoItem(int index) {
     setState(() {
-      _selectedIndex = index;
+      textController.text = todoItems[index];
+      todoItems.removeAt(index);
+      todoCompleted.removeAt(index);
     });
+    _saveTodos();
+  }
+
+  void deleteTodoItem(int index) {
+    setState(() {
+      todoItems.removeAt(index);
+      todoCompleted.removeAt(index);
+    });
+    _saveTodos();
+  }
+
+  void toggleTodoCompleted(int index) {
+    setState(() {
+      todoCompleted[index] = !todoCompleted[index];
+    });
+    _saveTodos();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Assist'),
+        title: const Text('Todo List'),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+        ),
+        backgroundColor: const Color(0xFF004EA6),
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: 'Shopping',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.cases),
-            label: 'Work',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.purple,
-        onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final List<TaskItem> _items = [];
-  final TextEditingController _controller = TextEditingController();
-
-  void _addItem() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add Home Task'),
-          content: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(hintText: "Enter task name"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                _controller.clear();
-                Navigator.of(context).pop();
-              },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: textController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter a task...',
+                      border: OutlineInputBorder(),
+                    ),
+                    onSubmitted: (_) => addTodoItem(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll<Color>(Color(0xFFFFC8FF)),
+                  ),
+                  onPressed: addTodoItem,
+                  child: const Text('Add'),
+                ),
+              ],
             ),
-            TextButton(
-              child: const Text('Add'),
-              onPressed: () {
-                setState(() {
-                  _items.add(TaskItem(name: _controller.text));
-                });
-                _controller.clear();
-                Navigator.of(context).pop();
-              },
+            const SizedBox(height: 16),
+            Expanded(
+              child: todoItems.isEmpty
+                  ? Center(
+                child: Text(
+                  'No tasks yet!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              )
+                  : ListView.builder(
+                itemCount: todoItems.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: todoCompleted[index],
+                        onChanged: (bool? value) {
+                          toggleTodoCompleted(index);
+                        },
+                      ),
+                      title: GestureDetector(
+                        onTap: () => editTodoItem(index),
+                        child: Text(
+                          todoItems[index],
+                          style: TextStyle(
+                            fontSize: 16,
+                            decoration: todoCompleted[index]
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                            color: todoCompleted[index]
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => deleteTodoItem(index),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
-  }
-
-  void _removeItemAfterDelay(int index) {
-    Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        _items.removeAt(index);
-      });
-    });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: List.generate(_items.length, (index) {
-                final item = _items[index];
-                return CheckboxListTile(
-                  title: Text(
-                    item.name,
-                    style: TextStyle(
-                      decoration: item.isChecked ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
-                  value: item.isChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      item.isChecked = value ?? false;
-                      if (item.isChecked) {
-                        _removeItemAfterDelay(index);
-                      }
-                    });
-                  },
-                );
-              }),
-            ),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: _addItem,
-          child: const Text('Add Home Task'),
-        ),
-      ],
-    );
+  void dispose() {
+    textController.dispose();
+    super.dispose();
   }
-}
-
-class ShoppingPage extends StatefulWidget {
-  const ShoppingPage({super.key});
-
-  @override
-  _ShoppingPageState createState() => _ShoppingPageState();
-}
-
-class _ShoppingPageState extends State<ShoppingPage> {
-  final List<TaskItem> _items = [];
-  final TextEditingController _controller = TextEditingController();
-
-  void _addItem() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add Shopping Task'),
-          content: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(hintText: "Enter task name"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                _controller.clear();
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Add'),
-              onPressed: () {
-                setState(() {
-                  _items.add(TaskItem(name: _controller.text));
-                });
-                _controller.clear();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _removeItemAfterDelay(int index) {
-    Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        _items.removeAt(index);
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: List.generate(_items.length, (index) {
-                final item = _items[index];
-                return CheckboxListTile(
-                  title: Text(
-                    item.name,
-                    style: TextStyle(
-                      decoration: item.isChecked ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
-                  value: item.isChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      item.isChecked = value ?? false;
-                      if (item.isChecked) {
-                        _removeItemAfterDelay(index);
-                      }
-                    });
-                  },
-                );
-              }),
-            ),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: _addItem,
-          child: const Text('Add Shopping Task'),
-        ),
-      ],
-    );
-  }
-}
-
-class WorkPage extends StatefulWidget {
-  const WorkPage({super.key});
-
-  @override
-  _WorkPageState createState() => _WorkPageState();
-}
-
-class _WorkPageState extends State<WorkPage> {
-  final List<TaskItem> _items = [];
-  final TextEditingController _controller = TextEditingController();
-
-  void _addItem() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add Work Task'),
-          content: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(hintText: "Enter task name"),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                _controller.clear();
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Add'),
-              onPressed: () {
-                setState(() {
-                  _items.add(TaskItem(name: _controller.text));
-                });
-                _controller.clear();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _removeItemAfterDelay(int index) {
-    Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        _items.removeAt(index);
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: List.generate(_items.length, (index) {
-                final item = _items[index];
-                return CheckboxListTile(
-                  title: Text(
-                    item.name,
-                    style: TextStyle(
-                      decoration: item.isChecked ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
-                  value: item.isChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      item.isChecked = value ?? false;
-                      if (item.isChecked) {
-                        _removeItemAfterDelay(index);
-                      }
-                    });
-                  },
-                );
-              }),
-            ),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: _addItem,
-          child: const Text('Add Work Task'),
-        ),
-      ],
-    );
-  }
-}
-
-class TaskItem {
-  String name;
-  bool isChecked;
-
-  TaskItem({required this.name, this.isChecked = false});
 }
